@@ -1,9 +1,10 @@
-import 'package:appcovid19/store/config_store.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:provider/provider.dart';
+import 'package:appcovid19/store/config_store.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:toast/toast.dart';
+//import 'package:toast/toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginFormPage extends StatefulWidget {
   @override
@@ -17,30 +18,32 @@ class _LoginFormPageState extends State<LoginFormPage> {
   String status='null';
 
   Future<void> signin()async{
-    activityDialog.show();
+    //activityDialog.show();
     await Provider.of<ConfigStore>(context, listen: false).signin(myuserData);
     status=Provider.of<ConfigStore>(context, listen: false).login;
     if(status=='IS_LOGIN'){
+      //activityDialog.hide();
       Navigator.of(context).pushReplacementNamed('/home_page');
         }
         else
         {
           this.setState((){});
-          activityDialog.hide();
+          //activityDialog.hide();
         }
   }
 
   Future<void> signup()async{
-    activityDialog.show();
+    //activityDialog.show();
     await Provider.of<ConfigStore>(context, listen: false).signup(myuserData);
     status=Provider.of<ConfigStore>(context, listen: false).login;
     if(status=='IS_LOGIN'){
+      //activityDialog.hide();
       Navigator.of(context).pushReplacementNamed('/home_page');
         }
         else
         {
           this.setState((){});
-          activityDialog.hide();
+          //activityDialog.hide();
         }
     
   }
@@ -121,14 +124,23 @@ class _LoginFormPageState extends State<LoginFormPage> {
   }
 
     void showToast(String msg) {
-        Toast.show(msg, context, duration: 3, gravity:  Toast.BOTTOM);
+        Fluttertoast.showToast(
+        msg: msg,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+        //Toast.show(msg, context, duration: 3, gravity:  Toast.BOTTOM);
   }
 
   @override
   Widget build(BuildContext context) {
     final dynamic args = ModalRoute.of(context).settings.arguments;
     activityDialog=new ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
-    status=='null'?print(''):showToast(status);
+    //status=='null'?print(''):showToast(status);
 
     return Scaffold(
       body: Center(

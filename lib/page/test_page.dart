@@ -9,47 +9,39 @@ class TestPage extends StatefulWidget {
 
 class _TestPageState extends State<TestPage> {
   List currentQuestion;
-
-  //questions label
-  Map questionSymptomes;
-  Map questionPronostics;
-
-  //user input
-  List<dynamic> inputQuestionSymptomes=[];
-  List<dynamic> inputQuestionPronostics=[];
-
-  //questions index
-  Map questionSymptomesIndex;
-  Map questionPronosticsIndex;
+  Map questions;
+  List<bool> reponses=[];
+  Map index;
 
   String btnText = "Suivant";
-  int indexQuestion=0;
+  int indexQuestion = 0;
 
   int _radioValue = 0;
 
-  void diagnostic(){
+  void diagnostic() {
+    Provider.of<ConfigStore>(context, listen: false).autoDiagnostic(input: reponses);
 
-
+    Navigator.of(context).pushReplacementNamed('/result');
+    
   }
 
   void checkedQuestions() {
     indexQuestion++;
+    _radioValue==0?reponses.add(false):reponses.add(true);
 
-    if (indexQuestion < questionSymptomes.length) {
+    if (indexQuestion < questions.length) {
       currentQuestion = [
         {
-          'index': questionSymptomesIndex[indexQuestion],
-          'label': questionSymptomes[questionSymptomesIndex[indexQuestion]],
-          'response':  _radioValue,
+          'index': questions[indexQuestion],
+          'label': questions[index[indexQuestion]],
+          'response': _radioValue,
         }
       ];
-    }
-    else
-    {
+    } else {
       btnText = "Voir le diagnostic";
     }
 
-    this.setState((){});
+    this.setState(() {});
   }
 
   void _handleRadioValueChange(int value) {
@@ -60,25 +52,15 @@ class _TestPageState extends State<TestPage> {
 
   @override
   void initData() {
-    questionSymptomes =
-        Provider.of<ConfigStore>(context, listen: false).questionsSymptomes;
-
-    questionSymptomesIndex = Provider.of<ConfigStore>(context, listen: false)
-        .questionsSymptomesIndex;
-
-    questionPronostics =
-        Provider.of<ConfigStore>(context, listen: false).questionsPronostics;
-
-    questionPronosticsIndex = Provider.of<ConfigStore>(context, listen: false)
-        .questionsPronosticsIndex;
-
-    print("DEBBUG ${questionSymptomesIndex[0]}");
+    questions =
+        Provider.of<ConfigStore>(context, listen: false).questions;
+    index = Provider.of<ConfigStore>(context, listen: false).index;
 
     currentQuestion = [
       {
-        'index': questionSymptomesIndex[indexQuestion],
-        'label': questionSymptomes[questionSymptomesIndex[indexQuestion]],
-        'response':  _radioValue,
+        'index': questions[indexQuestion],
+        'label': questions[index[indexQuestion]],
+        'response': _radioValue,
       }
     ];
   }
@@ -102,16 +84,15 @@ class _TestPageState extends State<TestPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               _Questionlabel(),
-              btnText != "Voir le diagnostic"?_radioButton():Text(''),
+              btnText != "Voir le diagnostic" ? _radioButton() : Text(''),
               SizedBox(height: 30),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.80,
                 child: RaisedButton(
                   onPressed: () {
-                    btnText != "Voir le diagnostic"?
-                    checkedQuestions():
-                    diagnostic();
-
+                    btnText != "Voir le diagnostic"
+                        ? checkedQuestions()
+                        : diagnostic();
                   },
                   child: Text(
                     btnText,
@@ -127,23 +108,21 @@ class _TestPageState extends State<TestPage> {
     );
   }
 
-  Widget _Questionlabel(){
-
+  Widget _Questionlabel() {
     return SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.80,
-                  child: 
-                  
-                  Text(
-                    btnText != "Voir le diagnostic"?
-                    currentQuestion[0]['label'].toString():
-                    "Continuer pour voir un diagnostic rapide, si vos symptomes sont alarmantes, nous vous mettrons en contact avec un hopital",
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 22,
-                    ),
-                    textAlign: TextAlign.center,
-                  ));
+        width: MediaQuery.of(context).size.width * 0.80,
+        child: Text(
+          btnText != "Voir le diagnostic"
+              ? currentQuestion[0]['label'].toString()
+              : "Continuer pour voir un diagnostic rapide, si vos symptomes sont alarmantes, nous vous mettrons en contact avec un hopital",
+          style: TextStyle(
+            fontWeight: FontWeight.normal,
+            fontSize: 22,
+          ),
+          textAlign: TextAlign.center,
+        ));
   }
+
   Widget _radioButton() {
     return new Row(
       mainAxisAlignment: MainAxisAlignment.center,
