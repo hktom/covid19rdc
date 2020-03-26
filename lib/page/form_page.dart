@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:provider/provider.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:toast/toast.dart';
 
 class LoginFormPage extends StatefulWidget {
   @override
@@ -13,17 +14,34 @@ class _LoginFormPageState extends State<LoginFormPage> {
   final _formKey = GlobalKey<FormState>();
   final Map myuserData={};
   ProgressDialog activityDialog;
-  String status;
+  String status='null';
 
   Future<void> signin()async{
     activityDialog.show();
-    await Provider.of<ConfigStore>(context, listen: false).signin(myuserData).then((result){
-      activityDialog.hide();
-    });
+    await Provider.of<ConfigStore>(context, listen: false).signin(myuserData);
+    status=Provider.of<ConfigStore>(context, listen: false).login;
+    if(status=='IS_LOGIN'){
+      Navigator.of(context).pushReplacementNamed('/home_page');
+        }
+        else
+        {
+          this.setState((){});
+          activityDialog.hide();
+        }
   }
 
   Future<void> signup()async{
-    //await Provider.of<ConfigStore>(context).signup(myuserData);
+    activityDialog.show();
+    await Provider.of<ConfigStore>(context, listen: false).signup(myuserData);
+    status=Provider.of<ConfigStore>(context, listen: false).login;
+    if(status=='IS_LOGIN'){
+      Navigator.of(context).pushReplacementNamed('/home_page');
+        }
+        else
+        {
+          this.setState((){});
+          activityDialog.hide();
+        }
     
   }
 
@@ -46,9 +64,13 @@ class _LoginFormPageState extends State<LoginFormPage> {
           SizedBox(
               width: MediaQuery.of(context).size.width * 0.80,
               child: RaisedButton(onPressed: () {
-               signin();
+                 if (_formKey.currentState.validate()) {
+                    signin();
+                 }
               }, child: Text("Se connecter", style: TextStyle(color:Colors.white),),color: Colors.blue[900],),
             ),
+
+
           
         ]));
   }
@@ -89,17 +111,24 @@ class _LoginFormPageState extends State<LoginFormPage> {
           SizedBox(
               width: MediaQuery.of(context).size.width * 0.80,
               child: RaisedButton(onPressed: () {
-               signup();
+                if (_formKey.currentState.validate()) {
+                    signup();
+                 }
               }, child: Text("Je creer mon compte", style: TextStyle(color:Colors.white),),color: Colors.blue[900],),
             ),
           
         ]));
   }
 
+    void showToast(String msg) {
+        Toast.show(msg, context, duration: 3, gravity:  Toast.BOTTOM);
+  }
+
   @override
   Widget build(BuildContext context) {
     final dynamic args = ModalRoute.of(context).settings.arguments;
     activityDialog=new ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
+    status=='null'?print(''):showToast(status);
 
     return Scaffold(
       body: Center(
@@ -116,6 +145,7 @@ class _LoginFormPageState extends State<LoginFormPage> {
               ),
               args['formType']=="login"?
               _renderFormLogin(): _renderFormSubscribe(),
+              
             ],
           ),
         ),
@@ -138,7 +168,7 @@ class _LoginFormPageState extends State<LoginFormPage> {
         },
         validator: (value) {
           if (value.isEmpty) {
-            return error;
+            return error.toString();
           }
           return null;
         },

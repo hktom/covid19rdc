@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:appcovid19/store/config_store.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -6,8 +8,21 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String status='null';
+
+
+  Future<void> checkLog()async{
+    await Provider.of<ConfigStore>(context, listen: false).isLog();
+    status=Provider.of<ConfigStore>(context, listen: false).login;
+    if(status=='IS_LOGIN'){
+      Navigator.of(context).pushReplacementNamed('/home_page');
+        }
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    checkLog();
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(

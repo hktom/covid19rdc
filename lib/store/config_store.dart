@@ -1,9 +1,8 @@
 import 'package:appcovid19/ressource/userAuth.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class ConfigStore extends ChangeNotifier {
-  dynamic login;
+  String login;
   Map userData={};
 
   Map resultTest={
@@ -13,6 +12,18 @@ class ConfigStore extends ChangeNotifier {
   Map resultReport={
     'result':''
   };
+
+   Map questionsSymptomesIndex={
+    0:'fievre',
+    1:'toux',
+    2:'courbature',
+    3:'gorge',
+    4:'diarrhee',
+    5:'fatigue',
+    6:'alimentation',
+    7:'respiratoire',
+    8:'autres',
+   };
 
   Map questionsSymptomes={
     'fievre':'Pensez-vous avoir eu de la fièvre ces derniers jours (frissons, sueurs) ?',
@@ -33,6 +44,21 @@ class ConfigStore extends ChangeNotifier {
 
     'autres':'Comment vous sentez-vous, Avez-vous d’autre symptôme?'
 
+  };
+
+    Map questionsPronosticsIndex={
+    0:'age',
+    1:'poids',
+    2:'taille',
+    3:'cardiaque',
+    4:'diabetique',
+    5:'cancer',
+    6:'pneumologue',
+    7:'dialyse',
+    8:'foie',
+    9:'grossesse',
+    10:'defense',
+    11:'traitement',
   };
 
   Map questionsPronostics={
@@ -77,12 +103,30 @@ class ConfigStore extends ChangeNotifier {
 
   }
 
+  Future<void> isLog()async{
+
+    try {
+      UserAuth userauth= new UserAuth();
+      final checking=await userauth.checkLog();
+      if(checking==true)
+      {
+        login="IS_LOGIN";
+      }
+      else
+      {
+        login="IS_NOT_LOGIN";
+      }
+    } catch (e) {
+      login=e.toString();
+    }
+  }
+
   Future<void> signin(input)async{
 
-    UserAuth userauth= new UserAuth();
     try {
+      UserAuth userauth= new UserAuth();
       await userauth.logEmailPassword(email:input['email'], password:input['password']);
-      login=true;
+      login="IS_LOGIN";
       userData=input;
     } catch (e) {
       login=e.toString();
@@ -92,10 +136,10 @@ class ConfigStore extends ChangeNotifier {
 
   Future<void> signup(input)async{
 
-    UserAuth userauth= new UserAuth();
     try {
+      UserAuth userauth= new UserAuth();
       await userauth.createEmailPassword(email:input['email'], password:input['password']);
-      login=true;
+      login="IS_LOGIN";
       userData=input;
     } catch (e) {
       login=e.toString();

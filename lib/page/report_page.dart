@@ -8,8 +8,15 @@ class ReportPage extends StatefulWidget {
 class _ReportPageState extends State<ReportPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
+    return Scaffold(
+      appBar: AppBar(title: Text('Signaler'), centerTitle: true,),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+
+          ],
+        ),
+      ),
     );
   }
 }
