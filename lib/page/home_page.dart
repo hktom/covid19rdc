@@ -9,6 +9,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  Map<String, dynamic> currentSituation={};
+
   Widget _renderCardButton({label, icon, colors, link}) {
     return TouchableOpacity(
       onTap: () {
@@ -55,7 +58,7 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         Expanded(
           child: _renderCardButton(
-              label: "Confirmé 45",
+              label: "Confirmé ${currentSituation['confirmed'].toString()}",
               icon: Icons.local_hospital,
               colors: Colors.orange[400],
               link: "#"),
@@ -63,7 +66,7 @@ class _HomePageState extends State<HomePage> {
         ),
         Expanded(
           child: _renderCardButton(
-              label: "Guéris 1",
+              label: "Guéris ${currentSituation['sick'].toString()}",
               icon: Icons.supervised_user_circle,
               colors: Colors.green[200],
               link: "#"),
@@ -71,7 +74,7 @@ class _HomePageState extends State<HomePage> {
         ),
         Expanded(
           child: _renderCardButton(
-              label: "Décès 3",
+              label: "Décès ${currentSituation['dead'].toString()}",
               icon: Icons.departure_board,
               colors: Colors.blue[200],
               link: "#"),
@@ -86,7 +89,7 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         Expanded(
           child: _renderCardButton(
-              label: "Actif 41",
+              label: "Malade ${currentSituation['sick'].toString()}",
               icon: Icons.perm_identity,
               colors: Colors.red[400],
               link: "#"),
@@ -151,14 +154,22 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context).pushNamed("/mask");
               },
             ),
-            ListTile(
-              leading: Icon(Icons.power_settings_new),
-              title: Text("Se deconnecter"),
+          ListTile(
+              leading: Icon(Icons.group_work),
+              title: Text("Situation dans le monde"),
               onTap: () async {
                 await Provider.of<ConfigStore>(context, listen: false).logout();
-                Navigator.of(context).pushReplacementNamed("/login_page");
+                Navigator.of(context).pushNamed("/world");
               },
             ),
+            // ListTile(
+            //   leading: Icon(Icons.power_settings_new),
+            //   title: Text("Se deconnecter"),
+            //   onTap: () async {
+            //     await Provider.of<ConfigStore>(context, listen: false).logout();
+            //     Navigator.of(context).pushReplacementNamed("/login_page");
+            //   },
+            // ),
           ],
         ),
       );
@@ -166,9 +177,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    currentSituation=Provider.of<ConfigStore>(context, listen: false).currentSituation;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        title: Text("Restons à la maison, protegeons nous", style:TextStyle(fontSize: 14, color:Colors.black)),
         iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
         elevation: 0.0,

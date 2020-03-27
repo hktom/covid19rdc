@@ -8,6 +8,8 @@ import 'package:appcovid19/page/protection.dart';
 import 'package:appcovid19/page/report_page.dart';
 import 'package:appcovid19/page/result.dart';
 import 'package:appcovid19/page/test_page.dart';
+import 'package:appcovid19/page/world.dart';
+import 'package:appcovid19/page/world_country_state.dart';
 import 'package:appcovid19/store/config_store.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +39,8 @@ class _MyAppState extends State<MyApp> {
           '/protection': (context) => Protection(),
           '/mask': (context) => Mask(),
           '/result': (context) => Result(),
+          '/world': (context) => World(),
+          '/world_country_state': (context) => WorldCountryState(),
         },
       ),
     );
