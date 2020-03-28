@@ -10,11 +10,10 @@ class InitPage extends StatefulWidget {
 class _InitPageState extends State<InitPage> {
 
   String status='null';
-  String error="connexion...";
+  String error="connexion";
 
   Future<void> initData() async {
     await Provider.of<ConfigStore>(context, listen: false).worldState();
-    await Provider.of<ConfigStore>(context, listen: false).rdcState();
     
     if(Provider.of<ConfigStore>(context, listen: false).loadData=="DATA_HAS_LOADED")
     {
@@ -45,6 +44,7 @@ class _InitPageState extends State<InitPage> {
               flex: 0,
             ),
             SizedBox(height:40),
+            error=="connexion"?CircularProgressIndicator(strokeWidth: 2,):
             Text(error),
             SizedBox(
               height: 10,

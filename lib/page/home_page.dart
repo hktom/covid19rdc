@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         Expanded(
           child: _renderCardButton(
-              label: "Confirmé ${currentSituation['confirmed'].toString()}",
+              label: "Confirmé ${currentSituation['cases']['active'].toString()}",
               icon: Icons.local_hospital,
               colors: Colors.orange[400],
               link: "#"),
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
         ),
         Expanded(
           child: _renderCardButton(
-              label: "Guéris ${currentSituation['sick'].toString()}",
+              label: "Guéris ${currentSituation['cases']['recovered'].toString()}",
               icon: Icons.supervised_user_circle,
               colors: Colors.green[200],
               link: "#"),
@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
         ),
         Expanded(
           child: _renderCardButton(
-              label: "Décès ${currentSituation['dead'].toString()}",
+              label: "Décès ${currentSituation['deaths']['total'].toString()}",
               icon: Icons.departure_board,
               colors: Colors.blue[200],
               link: "#"),
@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         Expanded(
           child: _renderCardButton(
-              label: "Malade ${currentSituation['sick'].toString()}",
+              label: "Malade ${currentSituation['cases']['total'].toString()}",
               icon: Icons.perm_identity,
               colors: Colors.red[400],
               link: "#"),
@@ -174,10 +174,14 @@ class _HomePageState extends State<HomePage> {
         ),
       );
   }
+  @override
+  void initState() {
+    currentSituation=Provider.of<ConfigStore>(context, listen: false).currentSituation;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    currentSituation=Provider.of<ConfigStore>(context, listen: false).currentSituation;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

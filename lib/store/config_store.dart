@@ -107,7 +107,7 @@ class ConfigStore extends ChangeNotifier {
           "nous vous conseillons de rester à votre domicile et de contacter votre médecin en cas d’apparition de nouveaux symptômes. Vous pourrez aussi utiliser à nouveau l’application pour réévaluer vos symptômes.";
     } else {
       resultTest =
-          "Votre situation ne relève probablement pas du Covid-19. N’hésitez pas à contacter votre médecin en cas de doute. Vous pouvez refaire le test en cas de nouveau symptôme pour réévaluer la situation. Pour toute information concernant le Covid-19, composer le 222.";
+          "Votre situation ne relève probablement pas du Covid-19. N’hésitez pas à contacter votre médecin en cas de doute. Vous pouvez refaire le test en cas de nouveau symptôme pour réévaluer la situation. Pour toute information concernant le Covid-19";
     }
   }
 
@@ -120,7 +120,7 @@ class ConfigStore extends ChangeNotifier {
           "nous vous conseillons de rester à votre domicile et de contacter votre médecin en cas d’apparition de nouveaux symptômes. Vous pourrez aussi utiliser à nouveau l’application pour réévaluer vos symptômes.";
     } else {
       resultTest =
-          "Sa situation ne relève probablement pas du Covid-19. N’hésitez pas à contacter votre médecin en cas de doute. Vous pouvez refaire le test en cas de nouveau symptôme pour réévaluer la situation. Pour toute information concernant le Covid-19, composer le 222.";
+          "Sa situation ne relève probablement pas du Covid-19. N’hésitez pas à contacter votre médecin en cas de doute. Vous pouvez refaire le test en cas de nouveau symptôme pour réévaluer la situation. Pour toute information concernant le Covid-19";
     }
   }
 
@@ -150,14 +150,13 @@ class ConfigStore extends ChangeNotifier {
       };
       dynamic response = await http.get(url, headers: headers);
       worldCurrentSituation = json.decode(response.body)['response'];
-
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // prefs.setString('worldCurrentSituation', response.toString());
-      // loadData = "DATA_HAS_LOADED";
+      worldCurrentSituation.forEach((item) {
+        if (item['country'] == "DRC") {
+          currentSituation=item;
+        }
+      });
+      loadData = "DATA_HAS_LOADED";
     } catch (e) {
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // dynamic response = prefs.getString('worldCurrentSituation');
-      // worldCurrentSituation = json.decode(response.body)['response'];
       loadData = "DATA_HAS_NOT_LOADED";
     }
   }
@@ -167,13 +166,8 @@ class ConfigStore extends ChangeNotifier {
       var url = 'https://stopcoronavirusrdc.info/api/lastpandemicstat';
       dynamic response = await http.get(url);
       currentSituation = json.decode(response.body)['data'];
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // prefs.setString('currentSituation', response.toString());
       loadData = "DATA_HAS_LOADED";
     } catch (e) {
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // dynamic response = prefs.getString('currentSituation');
-      // currentSituation = json.decode(response.body)['data'];
       loadData = "DATA_HAS_NOT_LOADED";
     }
   }
