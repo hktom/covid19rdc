@@ -10,22 +10,24 @@ class InitPage extends StatefulWidget {
 class _InitPageState extends State<InitPage> {
 
   String status='null';
+  String error="connexion...";
 
   Future<void> initData() async {
-    //await Provider.of<ConfigStore>(context, listen: false).isLogin();
-    //status=Provider.of<ConfigStore>(context, listen: false).login;
-    // if(status=='IS_LOGIN'){
-    //   Navigator.of(context).pushReplacementNamed('/home_page');
-    //     }
-    //     else
-    //     {
-    //       Navigator.of(context).pushReplacementNamed('/login_page');
-
-    //     }
     await Provider.of<ConfigStore>(context, listen: false).worldState();
-    await Provider.of<ConfigStore>(context, listen: false).rdcState().then((result){
-      Navigator.of(context).pushReplacementNamed('/home_page');
-    });
+    await Provider.of<ConfigStore>(context, listen: false).rdcState();
+    
+    if(Provider.of<ConfigStore>(context, listen: false).loadData=="DATA_HAS_LOADED")
+    {
+      return Navigator.of(context).pushReplacementNamed('/home_page');
+    }
+
+    if(Provider.of<ConfigStore>(context, listen: false).loadData=="DATA_HAS_NOT_LOADED")
+    {
+      return this.setState((){
+        error="Erreur de connection";
+        });
+    }
+
   }
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,8 @@ class _InitPageState extends State<InitPage> {
               ),
               flex: 0,
             ),
+            SizedBox(height:40),
+            Text(error),
             SizedBox(
               height: 10,
             ),

@@ -1,14 +1,17 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:appcovid19/ressource/userAuth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfigStore extends ChangeNotifier {
   String login = "NULL";
+  String loadData = "NULL";
   dynamic userData;
-   Map<String, dynamic> currentSituation={};
-   List<dynamic> worldCurrentSituation=[];
+  Map<String, dynamic> currentSituation = {};
+  List<dynamic> worldCurrentSituation = [];
 
   String resultTest;
   String resultReport;
@@ -121,24 +124,58 @@ class ConfigStore extends ChangeNotifier {
     }
   }
 
+  dynamic _read(filename) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$filename');
+      dynamic data = await file.readAsString();
+      return data;
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  _save(filename, data) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/$filename');
+    await file.writeAsString(data);
+  }
+
   Future<void> worldState() async {
-    var url = 'https://covid-193.p.rapidapi.com/statistics';
-    var headers ={
+    try {
+      var url = 'https://covid-193.p.rapidapi.com/statistics';
+      var headers = {
         "x-rapidapi-host": "covid-193.p.rapidapi.com",
-		    "x-rapidapi-key": "3057aea93cmsh39f0c368e02c27ep1bb0eajsn72c57e6469ac"
+        "x-rapidapi-key": "3057aea93cmsh39f0c368e02c27ep1bb0eajsn72c57e6469ac"
       };
-    var response = await http.get(url, headers: headers);
-    worldCurrentSituation=json.decode(response.body)['response'];
-    // print('Response status: ${response.statusCode}');
-    // print("Response body: ${response.body}");
+      dynamic response = await http.get(url, headers: headers);
+      worldCurrentSituation = json.decode(response.body)['response'];
+
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // prefs.setString('worldCurrentSituation', response.toString());
+      // loadData = "DATA_HAS_LOADED";
+    } catch (e) {
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // dynamic response = prefs.getString('worldCurrentSituation');
+      // worldCurrentSituation = json.decode(response.body)['response'];
+      loadData = "DATA_HAS_NOT_LOADED";
+    }
   }
 
   Future<void> rdcState() async {
-    var url = 'https://stopcoronavirusrdc.info/api/lastpandemicstat';
-    dynamic response = await http.get(url);
-    currentSituation=json.decode(response.body)['data'];
-    // print('Response status: ${response.statusCode}');
-    // print("Response body: ${currentSituation}");
+    try {
+      var url = 'https://stopcoronavirusrdc.info/api/lastpandemicstat';
+      dynamic response = await http.get(url);
+      currentSituation = json.decode(response.body)['data'];
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // prefs.setString('currentSituation', response.toString());
+      loadData = "DATA_HAS_LOADED";
+    } catch (e) {
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // dynamic response = prefs.getString('currentSituation');
+      // currentSituation = json.decode(response.body)['data'];
+      loadData = "DATA_HAS_NOT_LOADED";
+    }
   }
 
   Future<void> isLog() async {

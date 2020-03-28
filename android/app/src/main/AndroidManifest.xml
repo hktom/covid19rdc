@@ -7,8 +7,8 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="stop covid 19"
-        android:icon="@mipmap/ic_launcher">
+        android:label="stop covid19 rdc"
+        android:icon="@drawable/icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -20,6 +20,10 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- <meta-data
+            android:name="io.flutter.embedding.android.SplashScreenDrawable"
+            android:resource="@drawable/screen"
+            /> -->
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

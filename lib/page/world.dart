@@ -14,38 +14,55 @@ class _WorldState extends State<World> {
   List<dynamic> dummySearchList = [];
   List<dynamic> dummyList = [];
   List<dynamic> itemList = [];
+  String appbar="simpleappbar";
 
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text("Situation de Covid-19 dans le monde",
       style: TextStyle(fontSize: 14, color: Colors.white));
   final TextEditingController _filter = new TextEditingController();
 
-  void _searchPressed() {
+  AppBar _simpleAppBar() {
+    return AppBar(
+      title: new Text("Situation de Covid-19 dans le monde",
+          style: TextStyle(fontSize: 14, color: Colors.white)),
+      iconTheme: IconThemeData(color: Colors.white),
+      backgroundColor: Colors.red[400],
+      elevation: 0.0,
+      actions: <Widget>[
+        new IconButton(
+          icon: Icon(Icons.search),
+          onPressed: ()=>_searchPressed("searchappbar"),
+        ),
+      ],
+    );
+  }
+
+  AppBar _searchAppBar() {
+    return AppBar(
+      leading: IconButton(
+          icon: Icon(Icons.close), onPressed: () => _searchPressed("simpleappbar")),
+      title: TextField(
+        autofocus: true,
+        onChanged: (value) {
+          filterSearchResults(value);
+        },
+        controller: _filter,
+        decoration: new InputDecoration(
+            fillColor: Colors.white,
+            border: InputBorder.none,
+            hintStyle: TextStyle(color: Colors.white),
+            hintText: "Chercher un pays..."),
+      ),
+      iconTheme: IconThemeData(color: Colors.white),
+      backgroundColor: Colors.red[400],
+      elevation: 0.0,
+    );
+  }
+
+  void _searchPressed(appbar) {
     setState(() {
-      if (this._searchIcon.icon == Icons.search) {
-        this._searchIcon = new Icon(Icons.close);
-        this._appBarTitle = new TextField(
-          onChanged: (value) {
-            filterSearchResults(value);
-          },
-          controller: _filter,
-          decoration: new InputDecoration(
-              prefixIcon: new Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-              hintText: "Taper le nom d'un pays..."),
-        );
-      } else {
-        this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text("Situation de Covid-19 dans le monde",
-            style: TextStyle(fontSize: 14, color: Colors.white));
-        //filteredNames = names;
-        _filter.clear();
-        setState(() {
-          itemList = worldCurrentSituation;
-        });
-      }
+      this.appbar=appbar;
+      this.itemList = worldCurrentSituation;
     });
   }
 
@@ -110,18 +127,7 @@ class _WorldState extends State<World> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: _appBarTitle,
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Colors.red[400],
-        elevation: 0.0,
-        actions: <Widget>[
-          new IconButton(
-            icon: _searchIcon,
-            onPressed: _searchPressed,
-          ),
-        ],
-      ),
+      appBar: this.appbar=="simpleappbar"?_simpleAppBar():_searchAppBar(),
       body: Container(
           //width: MediaQuery.of(context).size.width *0.80,
           padding: EdgeInsets.symmetric(horizontal: 20),

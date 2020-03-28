@@ -27,6 +27,7 @@ class _MyAppState extends State<MyApp> {
     return ChangeNotifierProvider<ConfigStore>(
       create: (context) => ConfigStore(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         initialRoute: '/init_page',
         routes: {
           '/init_page': (context) => InitPage(),
