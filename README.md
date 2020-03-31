@@ -1,6 +1,7 @@
-# appcovid19
+# covid19RDC
+build in Flutter 
 
-A new Flutter project.
+Covid19RDC Open Source
 
 ## Getting Started
 
